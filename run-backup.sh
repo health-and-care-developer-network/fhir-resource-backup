@@ -12,6 +12,7 @@ BACKUP_DIR_NAME=${4:-${BACKUP_DIR_NAME:-file-profile-backups}}
 BACKUP_FILE_NAME=${5:-${BACKUP_FILE_NAME:-$DEFAUT_FILENAME}}
 TARGET_DIR=${6:-${TARGET_DIR:-/docker-data/fhir-profile-backups}}
 
+SHARENAME="applicationbackups"
 IMAGE_NAME=fhir-profile-backup
 CONTAINER_NAME=${CONTAINER_NAME:-fhir-profile-backup}
 
@@ -65,4 +66,12 @@ docker $TARGET_PREFIX run --rm --name $CONTAINER_NAME \
 	-e FILENAME=${BACKUP_FILE_NAME} \
 	-e BACKUP_DIR_NAME=${BACKUP_DIR_NAME} \
 	$SOURCE
+
+
+# Remove the volume again after the backup is complete
+if [ $TARGET_DIR = "azure" ]
+then
+    echo "Removing backup volume"
+    #docker $TARGET_PREFIX volume rm $VOLUME
+fi
 
