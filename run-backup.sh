@@ -47,7 +47,6 @@ then
 else
     # A target directory was provided, use that in preference to the Azure driver
     echo "Using the specified backup directory: $TARGET_DIR"
-    EXTRAFLAGS="--userns=host" # The azure volume driver only works if we disable the user namespacing for this container...
     DOCKER_VOLUMES="$TARGET_DIR:/backups"
 fi
 
@@ -65,6 +64,7 @@ docker $TARGET_PREFIX run --rm --name $CONTAINER_NAME \
 	-v $DOCKER_VOLUMES \
 	-e FILENAME=${BACKUP_FILE_NAME} \
 	-e BACKUP_DIR_NAME=${BACKUP_DIR_NAME} \
+	$EXTRAFLAGS \
 	$SOURCE
 
 
